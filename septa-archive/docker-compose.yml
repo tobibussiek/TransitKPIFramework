@@ -1,0 +1,12 @@
+services:
+  fetcher:
+    build: .
+    env_file:
+      - .env
+    environment:
+      - PYTHONUNBUFFERED=1
+    volumes:
+      - ./data:/data
+      - ./src:/app/src
+    command: python src/fetch_gtfsrt.py
+    restart: unless-stopped
