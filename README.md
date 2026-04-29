@@ -1,54 +1,23 @@
 # TransitKPIFramework
 
-Graduate research project exploring how sensitive On-Time Performance (OTP) metrics are to reasonable measurement choices, using SEPTA (Philadelphia) bus data.
+A reproducible pipeline for measuring SEPTA bus on-time performance from public real-time data, and a study of how much the reported number depends on the methodological choices behind it.
 
-## Research Question
+Across 1,080 defensible specifications on the same data, OTP ranged from 20% to 99%. The largest single source of variation was an upstream pipeline choice that almost no published GTFS-RT analysis discloses.
 
-How much does measured On-Time Performance vary across reasonable definitional choices — specifically lateness threshold, stop selection, and cancellation handling — on SEPTA bus Routes 23 and 47 on weekday service?
+![Specification curve](docs/specification_curve.png)
 
+## Repo
 
-## Project Structure
+- `septa-archive/`: Dockerized archiver, deployed to a DigitalOcean droplet
+- `notebooks/02_parse_gtfsrt.ipynb`: parse protobuf archive into DuckDB
+- `notebooks/03_trip_matching.ipynb`: match real-time predictions to scheduled stop events
+- `notebooks/04_otp_analysis.ipynb`: specification curve and sensitivity analysis
+- `docs/`: paper draft and presentation
 
-```
-TransitKPIFramework/
-├── docs/                        # Presentations and paper drafts
-├── notebooks/
-│   ├── 01_explore_gtfs_static.ipynb    # GTFS static data exploration, route scoping
-│   ├── 02_parse_gtfsrt.ipynb           # Parse GTFS-RT protobuf archive into DuckDB
-│   └── 03_trip_matching.ipynb      # Trip matching, delay calculation, OTP
-└── septa-archive/               # Dockerized GTFS-RT archiver (deployed to DigitalOcean)
-    ├── Dockerfile
-    ├── docker-compose.yml
-    └── src/
-        └── fetch_gtfsrt.py
-```
+## Stack
 
-## Data Sources
+Python, DuckDB, Docker, LaTeX.
 
-- **GTFS Static** — SEPTA schedule, stops, and trips via [OpenDataPhilly](https://opendataphilly.org/datasets/septa-gtfs/)
-- **GTFS-RT** — SEPTA live bus trip updates, self-archived via polling archiver at 60-second intervals
+## Contact
 
-## Pipeline
-
-1. `septa-archive/` polls SEPTA's GTFS-RT endpoint every 60 seconds and stores raw protobuf files on a DigitalOcean droplet
-2. `02_parse_gtfsrt.ipynb` parses raw `.pb` files into a DuckDB table with proper Eastern timezone handling via pytz
-3. `03_build_trip_delays.ipynb` matches GTFS-RT trip updates to static schedules, deduplicates to one record per stop event, and computes delay in minutes
-
-## Setup
-
-```bash
-# Install dependencies
-pip install duckdb pandas gtfs-realtime-bindings pytz jupyter
-
-# Run notebooks in order
-# 01 → 02 → 03
-```
-
-GTFS static files go in `data/google_bus/`. Raw `.pb` files go in `data/raw/gtfs_rt/`. Neither is included in this repo — see data sources above.
-
-## Status
-
-- [x] Phase 1 — GTFS static exploration, route scoping (Routes 23 and 47)
-- [x] Phase 2 — GTFS-RT parsing, trip matching, baseline OTP calculation
-- [ ] Phase 3 — Full robustness specification set, sensitivity analysis
-- [ ] Phase 4 — Power BI dashboard, research paper
+Tobi Bussiek · M.S. Computer Science, West Chester University of Pennsylvania (May 2026)
