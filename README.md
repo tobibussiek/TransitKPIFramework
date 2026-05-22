@@ -18,6 +18,11 @@ Across 1,080 defensible specifications on the same data, OTP ranged from 20% to 
 
 Python, DuckDB, Docker, LaTeX.
 
+## Power BI Dashboard
+
+An interactive dashboard for exploring OTP across the 864 specifications. Filter by snapshot rule, lateness window, and other choices to see how the reported number changes.
+![Power BI dashboard](docs/dashboard.png)
+
 ## Contact
 
 Tobi Bussiek · M.S. Computer Science, West Chester University of Pennsylvania (May 2026)
